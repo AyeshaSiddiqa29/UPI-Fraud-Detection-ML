@@ -148,16 +148,14 @@ python train_model.py
 ### 4. Run the Application
 Navigate to the backend folder and start the server:
 ```bash
-cd backend
-uvicorn main:app --reload
-```
-The server will start at `http://127.0.0.1:8000`.
+uvicorn backend.main:app --host 127.0.0.1 --port 7012 --reload
+The server will start at `http://127.0.0.1:7012`.
 
 ---
 
 ## 🎨 Usage
 
-1. **Open Browser**: Go to [http://127.0.0.1:8000](http://127.0.0.1:8000).
+1. **Open Browser**: Go to [http://127.0.0.1:7012](http://127.0.0.1:7012).
 2. **Batch Mode**:
    - Click "Batch Upload".
    - Drag & Drop your `transactions.csv`.

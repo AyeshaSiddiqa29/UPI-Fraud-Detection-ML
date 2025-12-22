@@ -23,7 +23,86 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let selectedFile = null;
 
-    // --- File Handling ---
+    // --- Tab Switching ---
+    const tabBatch = document.getElementById('tabBatch');
+    const tabSingle = document.getElementById('tabSingle');
+    const singleCard = document.getElementById('singleCard');
+    // mainCard already defined above
+
+    tabBatch.addEventListener('click', () => {
+        tabBatch.classList.add('active');
+        tabSingle.classList.remove('active');
+        mainCard.classList.remove('hidden');
+        singleCard.classList.add('hidden');
+        // Hide result if open
+        batchResultSection.classList.add('hidden');
+    });
+
+    tabSingle.addEventListener('click', () => {
+        tabSingle.classList.add('active');
+        tabBatch.classList.remove('active');
+        singleCard.classList.remove('hidden');
+        mainCard.classList.add('hidden');
+        batchResultSection.classList.add('hidden');
+    });
+
+    // --- Single Check Logic ---
+    const singleForm = document.getElementById('singleForm');
+    const singleResult = document.getElementById('singleResult');
+    const resultBadge = document.getElementById('resultBadge');
+    const resConfidence = document.getElementById('resConfidence');
+    const resMessage = document.getElementById('resMessage');
+    const checkFraudBtn = document.getElementById('checkFraudBtn');
+
+    singleForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Gather Data
+        const payload = {
+            transaction_type: document.getElementById('sf_type').value,
+            amount: parseFloat(document.getElementById('sf_amount').value),
+            merchant_category: document.getElementById('sf_category').value,
+            sender_bank: document.getElementById('sf_sender_bank').value,
+            receiver_bank: document.getElementById('sf_receiver_bank').value,
+            device_type: document.getElementById('sf_device').value,
+            network_type: document.getElementById('sf_network').value
+        };
+
+        // UI Loading
+        checkFraudBtn.disabled = true;
+        checkFraudBtn.innerHTML = '<div class="loader" style="display:block; width:20px; height:20px;"></div> Checking...';
+
+        try {
+            const response = await fetch('http://127.0.0.1:7012/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error("API Error");
+
+            const data = await response.json();
+
+            // Display Result
+            singleResult.classList.remove('hidden');
+            const isFraud = data.prediction === "Fraudulent";
+            const probPercent = (data.fraud_probability * 100).toFixed(2) + '%';
+
+            resultBadge.textContent = isFraud ? "High Risk" : "Safe";
+            resultBadge.className = isFraud ? "result-badge danger" : "result-badge success";
+
+            resConfidence.textContent = probPercent;
+            resMessage.textContent = isFraud
+                ? "This transaction shows patterns associated with fraud."
+                : "This transaction appears legitimate.";
+
+        } catch (err) {
+            alert("Error checking transaction: " + err.message);
+        } finally {
+            checkFraudBtn.disabled = false;
+            checkFraudBtn.innerHTML = '<span>Check Risk</span><div class="shine"></div>';
+        }
+    });
     dropZone.addEventListener('click', () => csvInput.click());
 
     csvInput.addEventListener('change', (e) => {
