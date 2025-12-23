@@ -128,8 +128,8 @@ upi_fraud_detection/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Gitali7/UPI-FRAUD-TRANSACTION-DETECTION-USING-MACHINE-LEARNING.git
-cd UPI-FRAUD-TRANSACTION-DETECTION-USING-MACHINE-LEARNING
+git clone https://github.com/AyeshaSiddiqa29/UPI-Fraud-Detection-ML.git
+cd UPI-Fraud-Detection-ML
 ```
 
 ### 2. Install Dependencies
@@ -166,3 +166,4 @@ The server will start at `http://127.0.0.1:7012`.
    - Click "Detect Fraud" to see the result.
 
 
+"# UPI-Fraud-Detection-ML" 
